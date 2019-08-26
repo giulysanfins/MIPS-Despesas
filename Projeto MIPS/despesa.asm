@@ -170,6 +170,7 @@ funcLista:
 la  $t1,vetor    # o registrador $t1 contém o endereço do vetor
 
 li $s2,0 #zerando $s2 para loop
+beq $s1,$s2,MENU
 loopPrint:
 
 li $v0,4
@@ -244,26 +245,30 @@ j MENU
 funcExcluir:
 la  $t1,vetor    # o registrador $t1 contém o endereço do vetor
 li $s2,0 #zerando $s2 para loop
+li $s3,0 #zerando $s2 para loop
+beq $s1,$s2,MENU
 
 
 li $v0,5  #entra com ID
 syscall
 
-add $t2,$v0,$zero
+add $t2,$v0,$zero #salva Id no t2
 loopExcluir:  #loop para encontrar o Id
 
 
-lw $s2,0($t1)
+lw $s2,0($t1)  #copia o Id do vetor para s2
 
-
+add $s3,$s3,1 #for(i=1;i<s2;i++)
 add $t1,$t1,36 # adicionando "36" para ir pra prox vetor
-bne $t2,$s2,loopExcluir
+beq $s2,$t2,f_exclui
+bne $s1,$s3,loopExcluir #compara a entrada com o vetor
+j MENU
+f_exclui:
 add $t1,$t1,-36 # adicionando "-36" para ir pra  vetor anterior
 
 add $t7,$t7,-36
 #reposiciona o ultimo registro no local da exclus�o
-lw $s2,0($t7) 
-sw $s2,0($t1)
+
 
 lw $s2,4($t7)
 sw $s2,4($t1)
@@ -279,6 +284,15 @@ sw $s2,16($t1)
 
 lw $s2,20($t7)
 sw $s2,20($t1)
+
+lw $s2,24($t7)
+sw $s2,24($t1)
+
+lw $s2,28($t7)
+sw $s2,28($t1)
+
+lw $s2,32($t7)
+sw $s2,32($t1)
 
 add $s1,$s1,-1
 
